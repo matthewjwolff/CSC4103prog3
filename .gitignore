@@ -1,3 +1,6 @@
 # Compiled binaries
 dot
 pi
+
+# bar's object file (because there's no main method)
+bar.o
