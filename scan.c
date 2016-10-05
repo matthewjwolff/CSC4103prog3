@@ -2,6 +2,8 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <stdio.h>
+#include <errno.h>
+#include <string.h>
 
 int main(int argc, char** argv) {
 	if(argc!=2) {
@@ -25,9 +27,11 @@ int main(int argc, char** argv) {
 	int i=0;
 	// TODO: make this not a hardcoded value
 	for(i; i<8; i++) {
-		printf("Connecting...\n");
 		socket.sin_port = htonl(ports[i]);
 		int did_connect = connect(sockfd, (struct sockaddr *) &socket, sizeof(socket));
+		printf("Result of connection to port %d: %d\n", ports[i], did_connect);
+		if(did_connect != 0)
+			printf("Error: %s\n", strerror(errno));
 		if(did_connect == 0)
 			printf("Port %d is accepting connections\n", ports[i]);
 	}
