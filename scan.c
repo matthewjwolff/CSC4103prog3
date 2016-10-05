@@ -10,7 +10,6 @@ int main(int argc, char** argv) {
 		printf("Invalid usage, supply only an ip address\n");
 		return -1;
 	}
-	char* ip = argv[1];
 	int sockfd = socket(AF_INET, SOCK_STREAM, 0);
 	if(sockfd < 0) {
 		printf("Error creating socket\n");
@@ -25,15 +24,13 @@ int main(int argc, char** argv) {
 	}
 	int ports[] = { 21, 22, 23, 25, 80, 143, 443, 993 };
 	int i=0;
-	// TODO: make this not a hardcoded value
-	for(i; i<8; i++) {
+	for(i; i<(sizeof(ports)/sizeof(ports[0])); i++) {
 		socket.sin_port = htonl(ports[i]);
 		int did_connect = connect(sockfd, (struct sockaddr *) &socket, sizeof(socket));
-		printf("Result of connection to port %d: %d\n", ports[i], did_connect);
-		if(did_connect != 0)
-			printf("Error: %s\n", strerror(errno));
 		if(did_connect == 0)
 			printf("Port %d is accepting connections\n", ports[i]);
+		else
+			printf("Could not connect: %s\n", strerror(errno));
 	}
 	return 0;
 }
